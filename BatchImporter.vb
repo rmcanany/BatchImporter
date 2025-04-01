@@ -144,6 +144,16 @@ Module BatchImporter
 
 		ProgramSettingsFilename = String.Format("{0}program_settings.txt", StartupPath)
 
+		If Not FileIO.FileSystem.FileExists(ProgramSettingsFilename) Then
+			CreateProgramSettings(ProgramSettingsFilename)
+			Dim s As String = String.Format("A new settings file was created.{0}", vbCrLf)
+			s = String.Format("{0}The location is '{1}'{2}", s, ProgramSettingsFilename, vbCrLf)
+			s = String.Format("{0}You need to configure it before continuing.{1}", s, vbCrLf)
+			s = String.Format("{0}Instructions to do so are in the file.{1}", s, vbCrLf)
+			MsgBox(s, vbOKOnly)
+			Return Nothing
+		End If
+
 		Try
 			Settings = IO.File.ReadAllLines(ProgramSettingsFilename).ToList
 
@@ -185,4 +195,47 @@ Module BatchImporter
 
 	End Function
 
+	Private Sub CreateProgramSettings(ProgramSettingsFilename As String)
+		Dim Outlist As New List(Of String)
+
+		Outlist.Add("' Program settings")
+		Outlist.Add("")
+		Outlist.Add("' Full path names are required for directories and templates.")
+		Outlist.Add("' Eg, 'c:\projects\customer_files\step_files', not '..\step_files'.")
+		Outlist.Add("' Any line preceeded with a single quote character is ignored.  Blank lines, too.")
+		Outlist.Add("")
+		Outlist.Add("")
+		Outlist.Add("'###### TEMPLATE FILE ######")
+		Outlist.Add("'Enter the name of the file to use as a template for import.")
+		Outlist.Add("")
+		Outlist.Add("TemplateFilename = C:\Program Files\Siemens\Solid Edge 2024\Template\ANSI Inch\ansi inch sheet metal.psm")
+		Outlist.Add("")
+		Outlist.Add("")
+		Outlist.Add("'###### IMPORT FILE EXTENSION ######")
+		Outlist.Add("'Enter the file extension of the files to import.")
+		Outlist.Add("")
+		Outlist.Add("ImportFileExtension = *.stp")
+		Outlist.Add("")
+		Outlist.Add("")
+		Outlist.Add("'###### IMPORT DIRECTORY ######")
+		Outlist.Add("'Enter the directory where to look for files to import.")
+		Outlist.Add("")
+		Outlist.Add("ImportDirectory = C:\data\infiles")
+		Outlist.Add("")
+		Outlist.Add("")
+		Outlist.Add("'###### EXPORT DIRECTORY ######")
+		Outlist.Add("'Enter the directory where to save imported files.")
+		Outlist.Add("")
+		Outlist.Add("ExportDirectory = C:\data\outfiles")
+		Outlist.Add("")
+		Outlist.Add("")
+		Outlist.Add("'###### IO ERROR LIMIT ######")
+		Outlist.Add("'Enter the number of file read/write errors to accept before stopping the program.")
+		Outlist.Add("")
+		Outlist.Add("IOErrorsMax = 3")
+
+		IO.File.WriteAllLines(ProgramSettingsFilename, Outlist)
+
+
+	End Sub
 End Module

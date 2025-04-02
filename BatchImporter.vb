@@ -38,7 +38,6 @@ Module BatchImporter
 		Filenames = GetFilenames(ProgramSettings("ImportFileExtension"), ProgramSettings("ImportDirectory"))
 		If Filenames Is Nothing Then Exit Sub
 
-
 		Console.WriteLine("Connecting to Solid Edge")
 
 		Try
@@ -56,7 +55,7 @@ Module BatchImporter
 
 		For Each Filename In Filenames
 
-			If IOErrors > 3 Then
+			If IOErrors > IOErrorsMax Then
 				MsgBox(String.Format("Number of file IO errors {0} exceed maximum of {1}.  Exiting...", IOErrors, IOErrorsMax), vbOKOnly)
 				Exit For
 			End If
@@ -65,7 +64,7 @@ Module BatchImporter
 			NewFilename = ""
 
 			Try
-				SEDoc = DirectCast(SEApp.Documents.OpenWithTemplate(Filename, ProgramSettings("TemplateFilename")), SolidEdgeFramework.SolidEdgeDocument)
+				SEDoc = DirectCast(SEApp.Documents.OpenWithTemplate(Filename, TemplateFilename)), SolidEdgeFramework.SolidEdgeDocument)
 				SEApp.DoIdle()
 				SEDoc.Activate()
 			Catch ex As Exception

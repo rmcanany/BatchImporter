@@ -64,7 +64,7 @@ Module BatchImporter
 			NewFilename = ""
 
 			Try
-				SEDoc = DirectCast(SEApp.Documents.OpenWithTemplate(Filename, TemplateFilename)), SolidEdgeFramework.SolidEdgeDocument)
+				SEDoc = DirectCast(SEApp.Documents.OpenWithTemplate(Filename, TemplateFilename), SolidEdgeFramework.SolidEdgeDocument)
 				SEApp.DoIdle()
 				SEDoc.Activate()
 			Catch ex As Exception
